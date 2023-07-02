@@ -18,6 +18,9 @@ public class player : MonoBehaviour
     [SerializeField] GameObject m_bulletPrefab = default;
     /// <summary>銃口の位置を設定するオブジェクト</summary>
     [SerializeField] Transform m_muzzle = default;
+    [SerializeField] Text _text;
+    [SerializeField] GameObject _clearPanel;
+    [SerializeField] GameObject _playPanel;
 
     /// <summary>水平方向の入力値</summary>
     float m_h;
@@ -38,6 +41,7 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _text.text = life.ToString();
         // 入力を受け取る
         m_h = Input.GetAxisRaw("Horizontal");
         // 各種入力を受け取る
@@ -74,11 +78,12 @@ public class player : MonoBehaviour
         {
             this.transform.position = _initialPosition;
             life = 3;
+            _text.text = life.ToString();
         }
-         if(this.transform.position.y > -10f) 
-        {
+         if(this.transform.position.y < -10f) 
+         {
             this.transform.position = _initialPosition;
-        }
+         }
     }
     private void FixedUpdate()
     {
@@ -114,8 +119,23 @@ public class player : MonoBehaviour
         {
             _wjump = 0;
         }
-        
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            life -= 1;
+            _text.text = life.ToString();
+        }
+        if (collision.gameObject.CompareTag("Goal"))
+        {
+            this.transform.position = _initialPosition;
+            _clearPanel.SetActive(true);
+            _playPanel.SetActive(false);
+        }
 
+    }
+
+    void GameClear()
+    {
+        SceneManager.LoadScene("GameClear");
     }
     
 
