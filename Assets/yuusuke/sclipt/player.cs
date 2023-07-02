@@ -114,10 +114,7 @@ public class player : MonoBehaviour
         {
             _wjump = 0;
         }
-        if (collision.gameObject.CompareTag("enemy"))
-        {
-            life -= 1;
-        }
+        
 
     }
     
