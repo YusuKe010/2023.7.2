@@ -48,7 +48,7 @@ public class EnemyMove : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // íeÇ∆ìñÇΩÇ¡ÇΩèÍçá
-        /*
+        
         if (collision.gameObject.tag == "Bullet")
         {
             _enemy_hp -= 1;
@@ -59,7 +59,7 @@ public class EnemyMove : MonoBehaviour
                 Death();
             }
         }
-        */
+        
     }
 
     public void SetSpawner(Spawner spawner)
@@ -74,6 +74,6 @@ public class EnemyMove : MonoBehaviour
             _spawner.DeleteEnemy();
         }
 
-        Destroy(this.gameObject);
+        Destroy(this.gameObject, 0.1f);
     }
 }

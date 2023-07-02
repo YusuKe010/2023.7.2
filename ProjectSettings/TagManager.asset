@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Wall
   - Goal
+  - Bullet
   layers:
   - Default
   - TransparentFX

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class bullet : MonoBehaviour
@@ -11,7 +12,7 @@ public class bullet : MonoBehaviour
     /// <summary>
     /// íeÇÃè¡Ç¶ÇÈéûä‘
     /// </summary>
-    [SerializeField] float bullettime = 5.0f;
+    [SerializeField] float bullettime = 3.0f;
     // Start is called before the first frame update
     public float Speed { get => bulletspeed; set => bulletspeed = value; }
 
@@ -19,9 +20,14 @@ public class bullet : MonoBehaviour
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         rb.velocity = Vector3.right * bulletspeed;
-
         Destroy(this.gameObject, bullettime);
-    }
 
-    // Update is called once per frame
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }

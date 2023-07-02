@@ -9,6 +9,7 @@ public class retry : MonoBehaviour
     // Start is called before the first frame update
     public void Panel()
     {
+        Debug.Log("‚¨‚µ‚½");
         _playPanel.SetActive(true);
         _clearPanel.SetActive(false);
     }
