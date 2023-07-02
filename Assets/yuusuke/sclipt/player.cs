@@ -21,6 +21,7 @@ public class player : MonoBehaviour
     [SerializeField] Text _text;
     [SerializeField] GameObject _clearPanel;
     [SerializeField] GameObject _playPanel;
+    float bulllettimer = 0;
 
     /// <summary>水平方向の入力値</summary>
     float m_h;
@@ -57,16 +58,23 @@ public class player : MonoBehaviour
         {
             FlipX(m_h);
         }
-
-        if (Input.GetButtonDown("Fire1"))
+        if (bulllettimer > 0.2f)
         {
-            GameObject bullet = Instantiate(m_bulletPrefab);
-            bullet.transform.position = m_muzzle.transform.position;
+            if (Input.GetButtonDown("Fire1"))
+            {
+                GameObject bullet = Instantiate(m_bulletPrefab);
+                bullet.transform.position = m_muzzle.transform.position;
 
-            //BulletControllerを取得する
-            bullet b = bullet.GetComponent<bullet>();
-            //スピードに自分の向き（SceleのX）をかける
-            b.Speed *= transform.localScale.x;
+                //BulletControllerを取得する
+                bullet b = bullet.GetComponent<bullet>();
+                //スピードに自分の向き（SceleのX）をかける
+                b.Speed *= transform.localScale.x;
+                bulllettimer = 0;
+            }
+        }
+        else
+        {
+            bulllettimer += Time.deltaTime;
         }
 
 
