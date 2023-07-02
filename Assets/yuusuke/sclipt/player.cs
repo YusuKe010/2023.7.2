@@ -23,6 +23,9 @@ public class player : MonoBehaviour
     [SerializeField] GameObject _playPanel;
     float bulllettimer = 0;
 
+    [SerializeField] float _invicible_time = 1f;
+    float _invicible_time_count = 0f;
+
     /// <summary>…•½•ûŒü‚Ì“ü—Í’l</summary>
     float m_h;
     float m_scaleX;
@@ -129,6 +132,7 @@ public class player : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            //Debug.Log("hit");
             life -= 1;
             _text.text = life.ToString();
         }
@@ -139,6 +143,30 @@ public class player : MonoBehaviour
             _playPanel.SetActive(false);
         }
 
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        // “G‚Æ“–‚½‚Á‚½ê‡
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            if (_invicible_time_count > _invicible_time)
+            {
+                //Debug.Log("hit");
+                life -= 1;
+                _text.text = life.ToString();
+                _invicible_time_count = 0f;
+            }
+            else
+            {
+                _invicible_time_count += Time.deltaTime;    // ŠÔ‚ğ‘‚â‚·
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        _invicible_time_count = 0f;
     }
 
     void GameClear()

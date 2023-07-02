@@ -42,6 +42,7 @@ public class EnemyMove : MonoBehaviour
         if(collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Enemy")
         {
             _move_Power *= -1;
+            this.transform.localScale = new Vector2((transform.localScale.x * -1), transform.localScale.y);
         }
     }
 
