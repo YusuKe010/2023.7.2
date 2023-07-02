@@ -12,6 +12,9 @@ public class EnemyMove : MonoBehaviour
     [SerializeField]
     private int _enemy_hp = 1;
 
+    [SerializeField]
+    private Spawner _spawner;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +32,7 @@ public class EnemyMove : MonoBehaviour
         // óéâ∫ÇµÇΩèÍçá
         if(transform.position.y < -10)
         {
-            Destroy(this.gameObject);
+            Death();
         }
     }
 
@@ -40,7 +43,10 @@ public class EnemyMove : MonoBehaviour
         {
             _move_Power *= -1;
         }
+    }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
         // íeÇ∆ìñÇΩÇ¡ÇΩèÍçá
         /*
         if (collision.gameObject.tag == "Bullet")
@@ -50,9 +56,24 @@ public class EnemyMove : MonoBehaviour
             // HPÇ™0Ç…Ç»Ç¡ÇΩÇÁ
             if(_enemy_hp <= 0)
             {
-                Destroy(this.gameObject);
+                Death();
             }
         }
         */
+    }
+
+    public void SetSpawner(Spawner spawner)
+    {
+        _spawner = spawner;
+    }
+
+    private void Death()
+    {
+        if (_spawner)
+        {
+            _spawner.DeleteEnemy();
+        }
+
+        Destroy(this.gameObject);
     }
 }
