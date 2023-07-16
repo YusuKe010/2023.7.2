@@ -513,8 +513,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2573fc819db3544b9232533a2912335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playPanel: {fileID: 979309187}
-  _clearPanel: {fileID: 271226053}
 --- !u!4 &318971728
 Transform:
   m_ObjectHideFlags: 0
@@ -1181,6 +1179,10 @@ PrefabInstance:
     - target: {fileID: 4903707685769313434, guid: e33357ae436e8114c9aae9c524d7a904, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6254899099983193357, guid: e33357ae436e8114c9aae9c524d7a904, type: 3}
+      propertyPath: _spawn_max
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6254899099983193357, guid: e33357ae436e8114c9aae9c524d7a904, type: 3}
       propertyPath: _spawn_time

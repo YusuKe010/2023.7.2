@@ -72,7 +72,7 @@ public class EnemyMove : MonoBehaviour
     {
         if (_spawner)
         {
-            _spawner.DeleteEnemy();
+            _spawner.DeleteObject();
         }
 
         Destroy(this.gameObject, 0.1f);

@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - Spawner
   - FallPoint
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
