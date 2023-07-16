@@ -44,7 +44,8 @@ public class EnemyMove : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // ï«Ç‚ìGÇ…ìñÇΩÇ¡ÇΩèÍçá
-        if(collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Enemy")
+        if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Enemy") 
+            || collision.gameObject.CompareTag("Spawner"))
         {
             _move_Power *= -1;
             this.transform.localScale = new Vector2((transform.localScale.x * -1), transform.localScale.y);
@@ -54,7 +55,6 @@ public class EnemyMove : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // íeÇ∆ìñÇΩÇ¡ÇΩèÍçá
-        
         if (collision.gameObject.tag == "Bullet")
         {
             _enemy_hp -= 1;
@@ -64,6 +64,11 @@ public class EnemyMove : MonoBehaviour
             {
                 Death();
             }
+        }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            _move_Power *= -1;
+            this.transform.localScale = new Vector2((transform.localScale.x * -1), transform.localScale.y);
         }
         
     }

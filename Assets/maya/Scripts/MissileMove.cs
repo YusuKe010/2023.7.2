@@ -36,7 +36,7 @@ public class MissileMove : MonoBehaviour
 
 
     // 当たり判定
-    ///*
+    /*
     private void OnCollisionEnter2D(Collision2D collision) 
     {
         // 壁と当たった場合
@@ -46,22 +46,19 @@ public class MissileMove : MonoBehaviour
             Death();
         }
     }
-    //*/
+    */
 
-    /*
+    ///*
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 壁と当たった場合
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Death();
-        }
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Player")
+            || collision.gameObject.CompareTag("Ground"))
         {
             Death();
         }
     }
-    */
+    //*/
 
     // スポナースクリプトのセット
     public void SetSpawner(Spawner spawner)
