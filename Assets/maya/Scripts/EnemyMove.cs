@@ -19,6 +19,11 @@ public class EnemyMove : MonoBehaviour
     void Start()
     {
         _rb_enemy = GetComponent<Rigidbody2D>();
+
+        if (_spawner)
+        {
+            transform.eulerAngles += new Vector3(0, 0, 180f);
+        }
     }
 
     // Update is called once per frame

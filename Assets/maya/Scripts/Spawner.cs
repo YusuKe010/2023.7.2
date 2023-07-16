@@ -46,7 +46,7 @@ public class Spawner : MonoBehaviour
         if (_spawn_time_count > _spawn_time && _object_num < _object_spawn_max)
         {
             _object_num++;
-            var gm_object = Instantiate(_ObjPrefab, _spawnPos.position, Quaternion.identity);
+            var gm_object = Instantiate(_ObjPrefab, _spawnPos.position, transform.rotation);
             if (gm_object.GetComponent<EnemyMove>() != null)
             {
                 gm_object.GetComponent<EnemyMove>().SetSpawner(this);
