@@ -24,7 +24,6 @@ public class player : MonoBehaviour
     [SerializeField] GameObject[] _Life;
     [SerializeField] float _invicible_time = 1f;
     [SerializeField] Transform m_bullet;
-    [SerializeField] CircleCollider2D _bulletCollider;
     AudioSource _charge;
 
     /// <summary>…•½•ûŒü‚Ì“ü—Í’l</summary>
@@ -201,6 +200,13 @@ public class player : MonoBehaviour
         _invicible_time_count = 0f;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Respawn"))
+        {
+            _initialPosition = this.transform.position;
+        }
+    }
     void GameClear()
     {
         SceneManager.LoadScene("GameStart");
