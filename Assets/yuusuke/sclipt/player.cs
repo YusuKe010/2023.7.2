@@ -44,7 +44,7 @@ public class player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        _charge = GetComponent<AudioSource>();
         m_rb = GetComponent<Rigidbody2D>();
         _initialPosition = this.transform.position;
     }
@@ -55,7 +55,7 @@ public class player : MonoBehaviour
         // 入力を受け取る
         m_h = Input.GetAxisRaw("Horizontal");
         // 各種入力を受け取る
-        if (Input.GetButtonDown("Jump") && _wjump < 1)//ジャンプをする。_wjumpの後の数字を変えるとダブルジャンプが出来たりする
+        if (Input.GetButtonDown("Jump") && _wjump < 2)//ジャンプをする。_wjumpの後の数字を変えるとダブルジャンプが出来たりする
         {
 
             m_rb.AddForce(Vector2.up * m_jumpPower, ForceMode2D.Impulse);
@@ -72,13 +72,13 @@ public class player : MonoBehaviour
             if (Input.GetButtonDown("Fire1"))
             {
                 _bulletScale = true;
-
+                
             }
             if(_bulletScale)
             {
-                if (bullettimer_count > 0.6f)
+                if (bullettimer_count > 1.0f)
                 {
-                    m_bullet.localScale = Vector2.one;
+                    m_bullet.localScale = Vector2.one * 0.9f;
                 }
                 else
                 {
@@ -88,9 +88,10 @@ public class player : MonoBehaviour
             
             if (Input.GetButtonUp("Fire1"))//左クリックとCtrlで弾を打つ処理
             {
+                _charge.Play();
                 GameObject bullet = Instantiate(m_bulletPrefab);
                 bullet.transform.position = m_muzzle.transform.position;
-
+                
                 //BulletControllerを取得する
                 bullet b = bullet.GetComponent<bullet>();
                 //スピードに自分の向き（SceleのX）をかけて画像の向きを変える
