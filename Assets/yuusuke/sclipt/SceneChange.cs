@@ -10,6 +10,7 @@ public class SceneChange : MonoBehaviour
     // Start is called before the first frame update
     public void NextGame(string SceneName)
     {
+        Debug.Log("aaa");
         SceneManager.LoadScene(SceneName);
     }
     public void Panel()
