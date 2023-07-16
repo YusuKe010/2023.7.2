@@ -13,24 +13,32 @@ public class player : MonoBehaviour
     /// <summary>入力に応じて左右を反転させるかどうかのフラグ</summary>
     [SerializeField] bool m_flipX = false;
     Rigidbody2D m_rb = default;
-    SpriteRenderer m_sprite = default;
     /// <summary>弾丸のプレハブ</summary>
     [SerializeField] GameObject m_bulletPrefab = default;
     /// <summary>銃口の位置を設定するオブジェクト</summary>
     [SerializeField] Transform m_muzzle = default;
-    [SerializeField] Text _text;
+    /// <summary>/// ＵＩパネルのオブジェクト/// </summary>
     [SerializeField] GameObject _clearPanel;
     [SerializeField] GameObject _playPanel;
-    float bulllettimer = 0;
-
+    /// <summary>/// ライフのＵＩオブジェクト/// </summary>
+    [SerializeField] GameObject[] _Life;
     [SerializeField] float _invicible_time = 1f;
-    float _invicible_time_count = 0f;
+    [SerializeField] Transform m_bullet;
+    [SerializeField] CircleCollider2D _bulletCollider;
+    AudioSource _charge;
 
     /// <summary>水平方向の入力値</summary>
     float m_h;
     float m_scaleX;
+    float _invicible_time_count = 0f;
+    float bullettimer = 0;
+    float bullettimer_count = 0;
     int _wjump = 0;
     int life = 3;
+    int _Count = 2;
+
+    bool _bulletScale;
+
     Vector3 _initialPosition;
 
     // Start is called before the first frame update
@@ -38,18 +46,16 @@ public class player : MonoBehaviour
     {
 
         m_rb = GetComponent<Rigidbody2D>();
-        m_sprite = GetComponent<SpriteRenderer>();
         _initialPosition = this.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        _text.text = life.ToString();
         // 入力を受け取る
         m_h = Input.GetAxisRaw("Horizontal");
         // 各種入力を受け取る
-        if (Input.GetButtonDown("Jump") && _wjump < 2)
+        if (Input.GetButtonDown("Jump") && _wjump < 1)//ジャンプをする。_wjumpの後の数字を変えるとダブルジャンプが出来たりする
         {
 
             m_rb.AddForce(Vector2.up * m_jumpPower, ForceMode2D.Impulse);
@@ -61,45 +67,64 @@ public class player : MonoBehaviour
         {
             FlipX(m_h);
         }
-        if (bulllettimer > 0.2f)
+        if (bullettimer > 0.15f)
         {
             if (Input.GetButtonDown("Fire1"))
+            {
+                _bulletScale = true;
+
+            }
+            if(_bulletScale)
+            {
+                if (bullettimer_count > 0.6f)
+                {
+                    m_bullet.localScale = Vector2.one;
+                }
+                else
+                {
+                    bullettimer_count += Time.deltaTime;
+                }
+            }
+            
+            if (Input.GetButtonUp("Fire1"))//左クリックとCtrlで弾を打つ処理
             {
                 GameObject bullet = Instantiate(m_bulletPrefab);
                 bullet.transform.position = m_muzzle.transform.position;
 
                 //BulletControllerを取得する
                 bullet b = bullet.GetComponent<bullet>();
-                //スピードに自分の向き（SceleのX）をかける
+                //スピードに自分の向き（SceleのX）をかけて画像の向きを変える
                 b.Speed *= transform.localScale.x;
-                bulllettimer = 0;
+                bullettimer = 0;
+                m_bullet.localScale = Vector2.one * 0.3f;
+                bullettimer_count = 0;
+                _bulletScale = false;
             }
+
         }
         else
         {
-            bulllettimer += Time.deltaTime;
+            bullettimer += Time.deltaTime;
         }
 
-
+        //移動の処理(ベクトルを直接書き換えてる)
         Vector2 velocity = m_rb.velocity;
         velocity.x = m_h * m_movePower;
         m_rb.velocity = velocity;
 
-        if(life <= 0)
+        if (life <= 0)//ライフがゼロになった時の処理(ライフの数値を元に戻す、初期地点に戻る)
         {
             this.transform.position = _initialPosition;
             life = 3;
-            _text.text = life.ToString();
+            _Life[0].SetActive(true);
+            _Life[1].SetActive(true);
+            _Life[2].SetActive(true);
+            _Count = 2;
         }
-         if(this.transform.position.y < -10f) 
-         {
+        if (this.transform.position.y < -10f)//プレイヤーのｙ座標が-１０以下になると初期地点にもどる
+        {
             this.transform.position = _initialPosition;
-         }
-    }
-    private void FixedUpdate()
-    {
-        // 力を加えるのは FixedUpdate で行う
-        // m_rb.AddForce(Vector2.right * m_h * m_movePower, ForceMode2D.Force);
+        }
     }
 
     /// <summary>
@@ -126,21 +151,26 @@ public class player : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground"))//Groundタグに当たるとジャンプが出来るようになる
         {
             _wjump = 0;
         }
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))//エネミーに当たるとライフが減り、1つ画像を見えなくする
         {
             //Debug.Log("hit");
             life -= 1;
-            _text.text = life.ToString();
+            _Life[_Count].SetActive(false);
+            _Count--;
         }
-        if (collision.gameObject.CompareTag("Goal"))
+        if (collision.gameObject.CompareTag("Goal"))//ゴールに当たるとUIパネルを出して、初期地点にもどる
         {
             this.transform.position = _initialPosition;
             _clearPanel.SetActive(true);
             _playPanel.SetActive(false);
+        }
+        if (collision.gameObject.CompareTag("FallPoint"))//落ちたら初期地点にもどる
+        {
+            this.transform.position = _initialPosition;
         }
 
     }
@@ -148,14 +178,15 @@ public class player : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         // 敵と当たった場合
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))//エネミーに当たるとライフが減り、1つ画像を見えなくする
         {
-            if (_invicible_time_count > _invicible_time)
+            if (_invicible_time_count > _invicible_time)//敵に当たり続けても一定間隔でダメージを受ける
             {
                 //Debug.Log("hit");
                 life -= 1;
-                _text.text = life.ToString();
                 _invicible_time_count = 0f;
+                _Life[_Count].SetActive(false);
+                _Count--;
             }
             else
             {
@@ -171,9 +202,9 @@ public class player : MonoBehaviour
 
     void GameClear()
     {
-        SceneManager.LoadScene("GameClear");
+        SceneManager.LoadScene("GameStart");
     }
-    
+
 
 }
 
